@@ -12,8 +12,6 @@ This repository represents a full embedded autonomy project rather than a standa
 ## Award
 **First Prize** in an intelligent vehicle competition project.
 
-> Replace this line with the exact competition name and year if you want to make it even stronger.
-
 ---
 
 ## Key Highlights
