@@ -231,11 +231,6 @@ Potential future improvements include:
 
 ---
 
-## Disclaimer
-This repository is shared for educational, learning, and portfolio purposes only.  
-It reflects an embedded competition project and may depend on specific hardware, board-level configurations, and third-party platform support.
-
----
 
 ## Author
 Ashley Liu
