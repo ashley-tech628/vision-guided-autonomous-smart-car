@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">From road boundaries to steering guidance</title><desc id="desc">Illustrative lane geometry only — not a captured frame or replay of this firmware.</desc>
+<rect width="1200" height="630" fill="#f7fafc"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172b42}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#637992"/></marker></defs>
+<text x="48" y="52" font-size="28" fill="#172b42" font-weight="bold">From road boundaries to steering guidance</text>
+<text x="48" y="82" font-size="16" fill="#566a82" font-weight="normal">Illustrative lane geometry only — not a captured frame or replay of this firmware.</text>
+<rect x="48" y="120" width="610" height="455" rx="16" fill="#16243a"/>
+<path d="M 140 550 C 205 420 345 370 335 150" fill="none" stroke="#47d2d0" stroke-width="7"/>
+<path d="M 600 550 C 500 420 435 360 400 150" fill="none" stroke="#e9bc67" stroke-width="7"/>
+<path d="M 370 550 C 350 420 390 365 367 150" fill="none" stroke="#eaf1ff" stroke-width="4"/>
+<line x1="370" y1="550" x2="370" y2="150" stroke="#8ca0ba" stroke-width="2" stroke-dasharray="8 8"/>
+<circle cx="389" cy="350" r="9" fill="#fa827d"/>
+<text x="82" y="155" font-size="16" fill="#eaf1ff" font-weight="normal">far</text>
+<text x="82" y="548" font-size="16" fill="#eaf1ff" font-weight="normal">near</text>
+<rect x="705" y="130" width="445" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="725" y="164" font-size="20" fill="#172b42" font-weight="bold">Boundary extraction</text>
+<text x="725" y="195" font-size="16" fill="#172b42" font-weight="normal">Locate left and right track limits</text>
+<text x="725" y="220" font-size="16" fill="#172b42" font-weight="normal">Handle discontinuities with track logic</text>
+<rect x="705" y="285" width="445" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="725" y="319" font-size="20" fill="#172b42" font-weight="bold">Path reconstruction</text>
+<text x="725" y="350" font-size="16" fill="#172b42" font-weight="normal">Repair missing boundary segments</text>
+<text x="725" y="375" font-size="16" fill="#172b42" font-weight="normal">Estimate the centerline</text>
+<rect x="705" y="440" width="445" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="725" y="474" font-size="20" fill="#172b42" font-weight="bold">Guidance</text>
+<text x="725" y="505" font-size="16" fill="#172b42" font-weight="normal">Turn path geometry into steering input</text>
+<text x="725" y="530" font-size="16" fill="#172b42" font-weight="normal">Keep perception and control connected</text>
+<text x="48" y="610" font-size="15" fill="#172b42" font-weight="normal">Teal: left boundary   ·   Gold: right boundary   ·   White: centerline   ·   Red: illustrative target</text>
+</svg>

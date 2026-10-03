@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="390" viewBox="0 0 1200 390" role="img" aria-labelledby="title desc">
+<title id="title">Demo Video — Vision-Guided Autonomous Smart Car</title>
+<desc id="desc">Clickable video title card, not a captured frame. Open the linked MP4 to view the demonstration.</desc>
+<rect width="1200" height="390" rx="18" fill="#12243b"/>
+<circle cx="160" cy="195" r="65" fill="#27c2bc"/>
+<path d="M145 163 L190 195 L145 227Z" fill="#12243b"/>
+<g font-family="Arial,Helvetica,sans-serif" fill="#ffffff">
+<text x="275" y="138" font-size="20" fill="#7ce2de" letter-spacing="3">PROJECT DEMONSTRATION</text>
+<text x="275" y="197" font-size="44" font-weight="bold">Demo Video</text>
+<text x="275" y="245" font-size="27">Vision-Guided Autonomous Smart Car</text>
+<text x="275" y="300" font-size="18" fill="#b8cadd">Click to open the video · TC264 embedded vision project</text>
+</g></svg>

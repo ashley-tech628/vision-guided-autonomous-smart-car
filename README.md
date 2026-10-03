@@ -1,234 +1,121 @@
-# Vision-Guided Autonomous Smart Car on TC264
+# Vision-Guided Autonomous Smart Car
 
-## Overview
-This project is a first-prize autonomous smart car system developed for intelligent vehicle competition scenarios. It is built on the Infineon TC264 platform and integrates embedded vision, real-time control, and event-aware track handling into a complete autonomous driving pipeline.
+**Embedded track perception, track-aware guidance and closed-loop vehicle control on TC264.**
 
-The system uses an MT9V03X grayscale camera for real-time track perception, extracts lane boundaries and centerline information, and drives the vehicle through closed-loop steering and speed control. In addition to standard lane following, the software includes dedicated logic for handling special track elements such as roundabouts, intersections, start-line detection, and parking behavior.
+## Demo Video
 
-This repository represents a full embedded autonomy project rather than a standalone algorithm demo. It combines perception, planning-oriented target generation, control, parameter tuning, and runtime debugging into a deployable on-vehicle software stack.
+[![Play the smart-car demo video](docs/media/demo-video-cover.svg)](docs/media/smart-car-demo.mp4)
 
----
+**[▶ Watch the demo video](docs/media/smart-car-demo.mp4)** — project demonstration footage provided by Ashley Liu. Click the preview to open the MP4; download it if your browser does not offer playback. The preview is a title card, not a frame from the video.
 
-## Award
-**First Prize** in an intelligent vehicle competition project.
+A competition smart-car project using an **Infineon TC264D** and an **MT9V03X grayscale camera**. Road geometry guides steering; encoder feedback supports motor control. The original project reports a **First Prize** competition result.
 
----
+**Author / portfolio owner: Ashley Liu (Xinying Liu).**
 
-## Key Highlights
-- Built on **Infineon TC264D**
-- Real-time grayscale vision using **MT9V03X**
-- Dual-core task partition for control and image processing
-- Robust lane-boundary extraction and centerline generation
-- Weighted target-point computation for steering guidance
-- Closed-loop steering and speed control
-- Support for complex track elements:
-  - roundabouts
-  - intersections
-  - start / finish line detection
-  - parking / garage-entry behavior
-- Runtime parameter tuning through LCD and keyboard interface
-- Wireless debugging / image transmission support
+![System architecture](docs/figures/smart-car-architecture.svg)
 
----
+[Perception](#perception-from-pixels-to-path) · [Control](#control-track-aware-speed-and-actuation) · [Code guide](#where-to-start-reading) · [Build](#building-for-the-vehicle)
 
-## System Architecture
-The software follows a perception-to-control pipeline:
+## Engineering problem
 
-1. **Image Acquisition**  
-   The camera captures grayscale road images in real time.
+A straight segment, a missing boundary and a roundabout arrive through the same camera interface but require different handling. The challenge is to maintain usable path geometry and translate it into consistent actuation.
 
-2. **Image Processing**  
-   The system performs thresholding, binarization, boundary extraction, centerline repair, and target-point calculation.
+| Challenge | Design approach |
+|---|---|
+| Incomplete road geometry | Boundary repair and centerline reconstruction |
+| Distinct track elements | Dedicated roundabout and intersection handling |
+| Changes in guidance and road state | Track-dependent speed settings and steering correction |
+| Hardware-dependent tuning | On-board interaction and debugging support |
 
-3. **Track-Element Understanding**  
-   Special scenarios such as roundabouts, intersections, starting lines, and parking zones are detected and handled through dedicated logic.
+The reviewed modules use geometric vision and embedded C; no trained neural perception model is identified in them.
 
-4. **Motion Control**  
-   Steering and motor commands are generated using closed-loop control based on image-derived path error and encoder feedback.
+## Perception: from pixels to path
 
-5. **Runtime Interaction and Debugging**  
-   Parameters can be tuned on-board, while image and debugging data can be transmitted for visualization and analysis.
+![Illustrative road boundaries and centerline](docs/figures/smart-car-lane-geometry.svg)
 
----
+*An explanatory drawing, not a captured camera frame or firmware replay.*
 
-## Core Features
+[`CODE/image_deal.c`](CODE/image_deal.c) includes `Ostu()` thresholding over three image regions and an adaptive-threshold call. The inspected image access uses a 188-column pointer and 70 rows; these are source dimensions, not a measured frame rate. `advanced_regression()` fits center/left/right line data, and `Center_line_deal()` maintains path geometry.
 
-### 1. Real-Time Vision-Based Lane Detection
-The project uses camera-based perception to detect road boundaries and estimate the centerline for navigation. The image-processing pipeline includes:
-- adaptive thresholding
-- region-based Otsu thresholding
-- left / right boundary extraction
-- centerline reconstruction and repair
-- weighted target-point computation for steering
+[`CODE/traffic_cricle.c`](CODE/traffic_cricle.c) searches boundary turning points and reconstructs segments by interpolation. These routines expose practical design questions: which rows should influence guidance, how to repair missing geometry, and when special-element logic should override ordinary following.
 
-### 2. Embedded Closed-Loop Control
-The vehicle uses feedback control for both steering and speed:
-- steering PWM control for servo actuation
-- motor speed regulation using encoder feedback
-- incremental PID control
-- adaptive / fuzzy control-related tuning logic
+## Control: track-aware speed and actuation
 
-### 3. Special Track Handling
-Beyond basic lane following, the codebase includes dedicated logic for competition-style road elements such as:
-- roundabout detection and handling
-- cross / intersection handling
-- start-line recognition
-- parking / garage-entry behavior
+![Source-defined speed settings](docs/figures/smart-car-speed-policy.svg)
 
-### 4. Real-Time Embedded Interaction
-The system supports field debugging and parameter tuning through:
-- LCD display
-- keyboard-based menu interaction
-- wireless data / image transmission
-- flash-based parameter storage
+**These bars represent configured control rules, not measured speed or lap-time results.**
 
----
+In [`CODE/control.c`](CODE/control.c), selected `speed_get()` branches scale `Set_Speed1`: roundabout handling with `junsu == 0` uses 85%, intersection handling uses 75%, and `poer_flag` uses 55%. Stop/out-of-track flags set the target to zero. Other branches differ; normal operation can add a geometry-dependent term.
 
-## Software Architecture
+The module also reads encoder counters, clears them, and drives direction GPIOs and PWM outputs. Target values require vehicle-specific calibration and are not physical speeds in meters per second.
 
-### CPU0 Responsibilities
-CPU0 primarily handles:
-- peripheral initialization
-- PWM and motor output
-- encoder setup
-- ADC and timer setup
-- keyboard and LCD interaction
-- control execution
-- parameter persistence
+## Execution model
 
-### CPU1 Responsibilities
-CPU1 primarily handles:
-- waiting for camera frame completion
-- running the image-processing pipeline
-- updating perception results for control use
+The original overview describes image processing on **CPU1**, with peripherals and control on **CPU0**. The architecture image summarizes that division; it is not a measured scheduling trace. See [`USER/`](USER/) for startup and interrupt integration.
 
-This task split improves responsiveness by separating lower-level control and hardware interaction from image-processing workloads.
-
----
-
-## Technical Stack
-
-### Hardware
-- **MCU:** Infineon TC264D
-- **Camera:** MT9V03X grayscale camera
-
-### Software / Development
-- Embedded C
-- AURIX / TC264 embedded development environment
-- PWM / encoder / timer / interrupt-based control
-- On-board LCD and keyboard interaction
-- Wireless debugging utilities
-
----
-
-## Perception Pipeline
-The perception stack includes:
-- grayscale image acquisition
-- threshold computation
-- binary image generation
-- lane-boundary extraction
-- centerline generation
-- weighted path-target calculation
-
-This pipeline enables the vehicle to follow the track robustly while also providing the basis for higher-level logic such as special-element detection.
-
----
-
-## Control Pipeline
-The control stack includes:
-- steering servo PWM output
-- motor actuation
-- encoder pulse acquisition
-- speed closed-loop control
-- direction correction from image-derived path error
-
-Together, these modules enable stable motion control under competition-style real-time constraints.
-
----
-
-## Project Structure
-```text
-.
-├── CODE/
-│   ├── control.c / control.h
-│   ├── image_deal.c / image_deal.h
-│   ├── PID.c / PID.h
-│   ├── traffic_cricle.c / traffic_cricle.h
-│   ├── keyboard.c / keyboard.h
-│   ├── swj.c / swj.h
-│   └── ZW_Tools.c / ZW_Tools.h
-│
-├── USER/
-│   ├── Cpu0_Main.c
-│   ├── Cpu1_Main.c
-│   ├── isr.c / isr.h
-│   └── TC264_config.h
-│
-└── Debug/
+```mermaid
+flowchart LR
+    F[Camera frame] --> G[Boundary and centerline geometry]
+    G --> T[Track-element handling]
+    T --> C[Steering guidance and speed setting]
+    C --> A[Servo and motor outputs]
+    E[Encoder feedback] --> C
 ```
 
----
+## Where to start reading
 
-## What This Project Demonstrates
-This project demonstrates practical ability across multiple engineering domains:
-- embedded systems programming
-- real-time control
-- vision-based perception on resource-constrained hardware
-- competition robotics
-- system integration under timing and hardware constraints
+| File / directory | Reading focus |
+|---|---|
+| [`CODE/image_deal.c`](CODE/image_deal.c) | Thresholding, geometry and line fitting |
+| [`CODE/traffic_cricle.c`](CODE/traffic_cricle.c) | Turning points and roundabout repairs |
+| [`CODE/control.c`](CODE/control.c) | Speed policy, encoder reads and motor outputs |
+| [`CODE/PID.c`](CODE/PID.c) | Controller implementation |
+| [`CODE/keyboard.c`](CODE/keyboard.c) | Parameter interaction |
+| [`CODE/swj.c`](CODE/swj.c) | Debug / communication utilities |
+| [`USER/`](USER/) | Core startup and interrupt integration |
+| [`Libraries.zip`](Libraries.zip) | Support-library archive |
 
-It is not just a software simulation or algorithm prototype. It is a full embedded autonomy pipeline designed to run on an actual intelligent vehicle platform.
+Start with perception and control, then follow startup code to establish which routines execute in the deployed configuration. A function's presence does not establish that every branch is active on every run.
 
----
+## Outcome and evidence
 
-## My Contributions
-My work in this project focused on building and integrating the full embedded autonomous driving stack, including:
-- real-time camera-based lane perception
-- lane-boundary and centerline extraction
-- target-point generation for path following
-- steering and speed control logic
-- special-track-element handling
-- runtime parameter tuning and debugging support
-- end-to-end system integration across control, image processing, and interrupts
+| Item | Available evidence |
+|---|---|
+| Competition outcome | First Prize, as reported in the original project description |
+| Perception and control implementation | Public C source linked above |
+| Speed-policy illustration | Selected active source branches |
+| Firmware rebuild during this documentation pass | Not performed |
+| Measured latency, lap time, completion rate or tracking error | No recorded measurement used here |
 
----
+No numerical performance result is inferred from configuration constants. Synchronized camera/steering telemetry and repeated track runs would provide the next useful experimental evidence.
 
-## Build and Run Notes
-This repository contains the embedded source code for the smart car software stack.
+## Personal contribution
 
-To build and run the project, you need:
-- the corresponding **TC264 hardware platform**
-- the **camera and motor driver setup**
-- the vendor / competition board support environment
-- the associated embedded toolchain and libraries
+The original overview attributes Ashley's work to perception, boundary/centerline extraction, target generation, steering/speed control, special-track handling, tuning/debugging and integration. Board support and third-party libraries remain distinct from application contributions.
 
-Because this is a hardware-dependent project, it is not intended to be executed directly on a general-purpose computer.
+## Building for the vehicle
 
----
+This source targets the TC264 board environment. A desktop compilation alone is insufficient to produce a working vehicle image.
 
-## Repository Notes
-For portfolio purposes, it is recommended to keep:
-- `CODE/`
-- `USER/`
-- essential configuration files
+1. Set up the matching TC264 toolchain and board-support project; inspect the bundled support archive before integrating it.
+2. Add `CODE/` and `USER/`, configure includes, startup/linker settings and the correct hardware pin mapping.
+3. Verify camera setup, encoder polarity, servo limits and motor-direction conventions against the vehicle.
+4. Compile and flash with the board's toolchain. Validate peripherals, then perform controlled track runs and record behavior.
 
-and remove generated or unnecessary content such as:
-- `Debug/`
-- IDE temporary files
-- automatically generated build artifacts
+Exact toolchain versions, wiring and flashing settings should be recovered from the original environment. A clean firmware rebuild was not verified for this README update.
 
----
+## Documentation visuals
 
-## Future Improvements
-Potential future improvements include:
-- more robust adaptive thresholding under changing lighting conditions
-- improved curve-speed planning
-- cleaner state-machine design for special track elements
-- better telemetry and debugging visualization
-- more modular architecture for reuse and maintenance
+The SVG images explain the source; they are not photographs, footage or experimental traces. See [evidence notes](docs/README_EVIDENCE.md) for interpretation and sources.
 
----
+Regenerate them with Python 3.10+ and the standard library:
 
+```bash
+python scripts/render_readme_figures.py
+```
 
-## Author
-Ashley Liu
+Useful follow-ups are actual camera-frame overlays, a documented track-run protocol, telemetry plots and explicit cross-core handoff documentation. These remain future additions.
+
+## License
+
+See [`LICENSE`](LICENSE). Third-party support code may carry separate terms.

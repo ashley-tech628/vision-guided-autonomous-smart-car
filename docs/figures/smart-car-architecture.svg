@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Vision → track handling → closed-loop actuation</title><desc id="desc">System overview for the TC264 smart-car firmware; conceptual data flow, not a timing trace.</desc>
+<rect width="1200" height="630" fill="#f7fafc"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172b42}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#637992"/></marker></defs>
+<text x="48" y="52" font-size="28" fill="#172b42" font-weight="bold">Vision → track handling → closed-loop actuation</text>
+<text x="48" y="82" font-size="16" fill="#566a82" font-weight="normal">System overview for the TC264 smart-car firmware; conceptual data flow, not a timing trace.</text>
+<rect x="48" y="120" width="250" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="68" y="154" font-size="20" fill="#172b42" font-weight="bold">01 · Camera</text>
+<text x="68" y="185" font-size="16" fill="#172b42" font-weight="normal">MT9V03X grayscale frames</text>
+<text x="68" y="210" font-size="16" fill="#172b42" font-weight="normal">Track appearance</text>
+<rect x="340" y="120" width="320" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="360" y="154" font-size="20" fill="#172b42" font-weight="bold">02 · Perception</text>
+<text x="360" y="185" font-size="16" fill="#172b42" font-weight="normal">Threshold / boundary processing</text>
+<text x="360" y="210" font-size="16" fill="#172b42" font-weight="normal">Lane and centerline geometry</text>
+<rect x="705" y="120" width="445" height="130" rx="15" fill="#e3f1f4" stroke="#c5d4e4"/>
+<text x="725" y="154" font-size="20" fill="#172b42" font-weight="bold">03 · Track-aware guidance</text>
+<text x="725" y="185" font-size="16" fill="#172b42" font-weight="normal">Roundabout and intersection logic</text>
+<text x="725" y="210" font-size="16" fill="#172b42" font-weight="normal">Repaired path / steering guidance</text>
+<line x1="298" y1="185" x2="332" y2="185" stroke="#637992" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="660" y1="185" x2="697" y2="185" stroke="#637992" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="48" y="315" width="385" height="150" rx="15" fill="#eef0fb" stroke="#c5d4e4"/>
+<text x="68" y="349" font-size="20" fill="#172b42" font-weight="bold">Feedback and tuning</text>
+<text x="68" y="380" font-size="16" fill="#172b42" font-weight="normal">Encoder pulse feedback</text>
+<text x="68" y="405" font-size="16" fill="#172b42" font-weight="normal">LCD / keyboard / debug support</text>
+<rect x="490" y="315" width="300" height="150" rx="15" fill="#eef0fb" stroke="#c5d4e4"/>
+<text x="510" y="349" font-size="20" fill="#172b42" font-weight="bold">04 · Control</text>
+<text x="510" y="380" font-size="16" fill="#172b42" font-weight="normal">Steering and speed regulation</text>
+<text x="510" y="405" font-size="16" fill="#172b42" font-weight="normal">Track-dependent speed setting</text>
+<rect x="850" y="315" width="300" height="150" rx="15" fill="#eef0fb" stroke="#c5d4e4"/>
+<text x="870" y="349" font-size="20" fill="#172b42" font-weight="bold">05 · Actuation</text>
+<text x="870" y="380" font-size="16" fill="#172b42" font-weight="normal">Servo PWM</text>
+<text x="870" y="405" font-size="16" fill="#172b42" font-weight="normal">Motor direction and PWM</text>
+<line x1="927" y1="250" x2="640" y2="307" stroke="#637992" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="433" y1="390" x2="482" y2="390" stroke="#637992" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="790" y1="390" x2="842" y2="390" stroke="#637992" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="48" y="530" font-size="18" fill="#172b42" font-weight="bold">Execution split described in the original project:</text>
+<text x="48" y="565" font-size="18" fill="#172b42" font-weight="normal">CPU1 · frame processing     |     CPU0 · peripheral interaction and control</text>
+<text x="48" y="603" font-size="16" fill="#566a82" font-weight="normal">Scheduling latency and cross-core synchronization need on-board verification.</text>
+</svg>

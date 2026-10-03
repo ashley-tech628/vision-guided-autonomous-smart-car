@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">Track-aware speed settings in the source code</title><desc id="desc">Selected branches in speed_get(); fractions of Set_Speed1, not measured vehicle speeds.</desc>
+<rect width="1200" height="630" fill="#f7fafc"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172b42}</style>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#637992"/></marker></defs>
+<text x="48" y="52" font-size="28" fill="#172b42" font-weight="bold">Track-aware speed settings in the source code</text>
+<text x="48" y="82" font-size="16" fill="#566a82" font-weight="normal">Selected branches in speed_get(); fractions of Set_Speed1, not measured vehicle speeds.</text>
+<text x="48" y="170" font-size="18" fill="#172b42" font-weight="normal">Reference setting</text>
+<rect x="360" y="145" width="660" height="36" rx="5" fill="#e4ebf3"/>
+<rect x="360" y="145" width="660" height="36" rx="5" fill="#147d92"/>
+<text x="1040" y="170" font-size="20" fill="#172b42" font-weight="bold">100%</text>
+<text x="48" y="245" font-size="18" fill="#172b42" font-weight="normal">Roundabout (junsu = 0)</text>
+<rect x="360" y="220" width="660" height="36" rx="5" fill="#e4ebf3"/>
+<rect x="360" y="220" width="561.0" height="36" rx="5" fill="#147d92"/>
+<text x="1040" y="245" font-size="20" fill="#172b42" font-weight="bold">85%</text>
+<text x="48" y="320" font-size="18" fill="#172b42" font-weight="normal">Intersection</text>
+<rect x="360" y="295" width="660" height="36" rx="5" fill="#e4ebf3"/>
+<rect x="360" y="295" width="495.0" height="36" rx="5" fill="#147d92"/>
+<text x="1040" y="320" font-size="20" fill="#172b42" font-weight="bold">75%</text>
+<text x="48" y="395" font-size="18" fill="#172b42" font-weight="normal">poer_flag branch</text>
+<rect x="360" y="370" width="660" height="36" rx="5" fill="#e4ebf3"/>
+<rect x="360" y="370" width="363.00000000000006" height="36" rx="5" fill="#147d92"/>
+<text x="1040" y="395" font-size="20" fill="#172b42" font-weight="bold">55%</text>
+<text x="48" y="470" font-size="18" fill="#172b42" font-weight="normal">Stop / out-of-track flag</text>
+<rect x="360" y="445" width="660" height="36" rx="5" fill="#e4ebf3"/>
+<text x="1040" y="470" font-size="20" fill="#172b42" font-weight="bold">0%</text>
+<text x="48" y="562" font-size="15" fill="#172b42" font-weight="normal">Other modes use different rules; the ordinary non-stop branch can add a geometry-dependent term.</text>
+<text x="48" y="603" font-size="16" fill="#566a82" font-weight="normal">Source: CODE/control.c. Configuration illustration; not an experimental performance result.</text>
+</svg>
